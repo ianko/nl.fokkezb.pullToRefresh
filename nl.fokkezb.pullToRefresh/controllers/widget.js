@@ -12,12 +12,19 @@ $.show = show;
     return;
   }
 
-  if (!_.isArray(args.children) || !_.contains(['Ti.UI.ListView', 'Ti.UI.TableView', 'de.marcelpociot.CollectionView'], args.children[0].apiName)) {
+  // ignore the <require> elements inside the widget
+  var list = _.find(args.children, function(child) {
+    if (!child.apiName)
+      return false;
+
+    return _.contains(['Ti.UI.ListView', 'Ti.UI.TableView', 'de.marcelpociot.CollectionView'], child.apiName);
+  });
+
+  if (!list) {
     console.error('[pullToRefresh] is missing required Ti.UI.ListView or Ti.UI.TableView or de.marcelpociot.CollectionView as first child element.');
     return;
   }
 
-  var list = args.children[0];
   delete args.children;
 
   _.extend($, args);
